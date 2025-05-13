@@ -1,0 +1,110 @@
+object FormCadAgendamentos: TFormCadAgendamentos
+  Left = 0
+  Top = 0
+  Caption = 'FormCadAgendamentos'
+  ClientHeight = 428
+  ClientWidth = 309
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 37
+    Top = 23
+    Width = 239
+    Height = 378
+    Color = clWhite
+    ParentBackground = False
+    TabOrder = 0
+    object Label_Cadastro: TLabel
+      Left = 21
+      Top = 33
+      Width = 188
+      Height = 30
+      Alignment = taCenter
+      Caption = 'Novo Agendamento'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -21
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+    end
+    object btnSalvar: TButton
+      Left = 117
+      Top = 325
+      Width = 90
+      Height = 25
+      Caption = 'Salvar'
+      TabOrder = 0
+      OnClick = btnSalvarClick
+    end
+    object btnCancelar: TButton
+      Left = 21
+      Top = 325
+      Width = 90
+      Height = 25
+      Caption = 'Cancelar'
+      TabOrder = 1
+      OnClick = btnCancelarClick
+    end
+    object editPlaca: TEdit
+      Left = 18
+      Top = 89
+      Width = 197
+      Height = 21
+      MaxLength = 7
+      TabOrder = 2
+    end
+    object editModelo: TEdit
+      Left = 18
+      Top = 129
+      Width = 197
+      Height = 21
+      TabOrder = 3
+    end
+    object cbxTipoVeiculo: TComboBox
+      Left = 18
+      Top = 168
+      Width = 196
+      Height = 21
+      TabOrder = 4
+      Items.Strings = (
+        'Carro'#11
+        'Moto'#11
+        'Caminhonete'
+        'Caminh'#227'o')
+    end
+    object editDataServico: TEdit
+      Left = 18
+      Top = 201
+      Width = 197
+      Height = 21
+      TabOrder = 5
+    end
+    object editHora: TEdit
+      Left = 18
+      Top = 236
+      Width = 197
+      Height = 21
+      TabOrder = 6
+    end
+    object cbxTipoLavacao: TComboBox
+      Left = 18
+      Top = 272
+      Width = 196
+      Height = 21
+      TabOrder = 7
+      Items.Strings = (
+        'Carro'#11
+        'Moto'#11
+        'Caminhonete'
+        'Caminh'#227'o')
+    end
+  end
+end

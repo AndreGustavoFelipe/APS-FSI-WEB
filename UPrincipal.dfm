@@ -1,0 +1,292 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 443
+  ClientWidth = 677
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  Menu = MainMenu1
+  OldCreateOrder = True
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 41
+    Width = 677
+    Height = 402
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 0
+    ExplicitLeft = 8
+    ExplicitTop = 47
+    object Panel3: TPanel
+      Left = 19
+      Top = 38
+      Width = 303
+      Height = 171
+      TabOrder = 0
+      object lblDtAgendada: TLabel
+        Left = 11
+        Top = 35
+        Width = 97
+        Height = 13
+        Caption = 'Data Agendamento:'
+      end
+      object DBTextDataAgendamento: TDBText
+        Left = 114
+        Top = 35
+        Width = 165
+        Height = 17
+        Alignment = taRightJustify
+        DataField = 'DATA_AGENDADA'
+        DataSource = ds
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lblHoraAgendada: TLabel
+        Left = 11
+        Top = 54
+        Width = 97
+        Height = 13
+        Caption = 'Hora Agendamento:'
+      end
+      object DBTextHoraAgendamento: TDBText
+        Left = 114
+        Top = 54
+        Width = 165
+        Height = 17
+        Alignment = taRightJustify
+        DataField = 'HORA_AGENDAMENTO'
+        DataSource = ds
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lblHoraEntrega: TLabel
+        Left = 11
+        Top = 73
+        Width = 68
+        Height = 13
+        Caption = 'Hora Entrega:'
+      end
+      object DBTextHoraEntrega: TDBText
+        Left = 114
+        Top = 73
+        Width = 165
+        Height = 17
+        Alignment = taRightJustify
+        DataField = 'HORA_ENTREGA'
+        DataSource = ds
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lblFuncionario: TLabel
+        Left = 11
+        Top = 92
+        Width = 59
+        Height = 13
+        Caption = 'Funcionario:'
+      end
+      object DBTextFuncionario: TDBText
+        Left = 114
+        Top = 92
+        Width = 165
+        Height = 17
+        Alignment = taRightJustify
+        DataField = 'ID_FUNCINARIO'
+        DataSource = ds
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lblStatus: TLabel
+        Left = 11
+        Top = 16
+        Width = 97
+        Height = 13
+        Caption = 'Status:'
+      end
+      object DBTextStatus: TDBText
+        Left = 114
+        Top = 16
+        Width = 165
+        Height = 17
+        Alignment = taRightJustify
+        DataField = 'RESULTADO_LEGIVEL'
+        DataSource = ds
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object btnCancelarAgendamento: TButton
+        Left = 11
+        Top = 122
+        Width = 100
+        Height = 25
+        Caption = 'Cancelar'
+        TabOrder = 0
+        OnClick = btnCancelarAgendamentoClick
+      end
+      object btnReagendar: TButton
+        Left = 179
+        Top = 122
+        Width = 100
+        Height = 25
+        Caption = 'Reagendar'
+        TabOrder = 1
+        OnClick = btnReagendarClick
+      end
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 0
+    Width = 677
+    Height = 41
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 1
+    object btnRefresh: TButton
+      Left = 186
+      Top = 0
+      Width = 75
+      Height = 41
+      Align = alLeft
+      TabOrder = 0
+      OnClick = btnRefreshClick
+    end
+    object dateBusca: TDateTimePicker
+      Left = 0
+      Top = 0
+      Width = 186
+      Height = 41
+      Align = alLeft
+      Date = 45787.000000000000000000
+      Time = 0.397523414350871500
+      TabOrder = 1
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 600
+    Top = 8
+    object Module11: TMenuItem
+      Caption = 'Novo Agendamento'
+      OnClick = Module11Click
+    end
+  end
+  object qryAgendamentos: TFDQuery
+    Connection = dm.con
+    SQL.Strings = (
+      
+        'SELECT ID, ID_CLIENTE, ID_FUNCINARIO, DATA_AGENDAMENTO, DATA_AGE' +
+        'NDADA, HORA_AGENDAMENTO, HORA_ENTREGA, PLACA, MODELO, TIPO_VEICU' +
+        'LO, status, '
+      '  CASE status'
+      '    WHEN '#39'0'#39' THEN '#39'Agendado'#39
+      '    WHEN '#39'1'#39' THEN '#39'Em andamento'#39
+      '    WHEN '#39'2'#39' THEN '#39'Finalizado'#39
+      '    WHEN '#39'3'#39' THEN '#39'Cancelado'#39
+      '    WHEN '#39'4'#39' THEN '#39'Atrasado'#39
+      '    ELSE '#39'Desconhecido'#39
+      '  END AS resultado_legivel'
+      'FROM agendamentos;')
+    Left = 600
+    Top = 64
+    object qryAgendamentosID: TIntegerField
+      FieldName = 'ID'
+      Origin = 'ID'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object qryAgendamentosID_CLIENTE: TIntegerField
+      FieldName = 'ID_CLIENTE'
+      Origin = 'ID_CLIENTE'
+      Required = True
+    end
+    object qryAgendamentosID_FUNCINARIO: TIntegerField
+      FieldName = 'ID_FUNCINARIO'
+      Origin = 'ID_FUNCINARIO'
+      Required = True
+    end
+    object qryAgendamentosDATA_AGENDAMENTO: TDateField
+      FieldName = 'DATA_AGENDAMENTO'
+      Origin = 'DATA_AGENDAMENTO'
+      Required = True
+    end
+    object qryAgendamentosDATA_AGENDADA: TDateField
+      FieldName = 'DATA_AGENDADA'
+      Origin = 'DATA_AGENDADA'
+      Required = True
+    end
+    object qryAgendamentosHORA_AGENDAMENTO: TTimeField
+      FieldName = 'HORA_AGENDAMENTO'
+      Origin = 'HORA_AGENDAMENTO'
+      Required = True
+    end
+    object qryAgendamentosHORA_ENTREGA: TTimeField
+      FieldName = 'HORA_ENTREGA'
+      Origin = 'HORA_ENTREGA'
+      Required = True
+    end
+    object qryAgendamentosPLACA: TStringField
+      FieldName = 'PLACA'
+      Origin = 'PLACA'
+      Required = True
+      Size = 200
+    end
+    object qryAgendamentosMODELO: TStringField
+      FieldName = 'MODELO'
+      Origin = 'MODELO'
+      Required = True
+      Size = 200
+    end
+    object qryAgendamentosTIPO_VEICULO: TSmallintField
+      FieldName = 'TIPO_VEICULO'
+      Origin = 'TIPO_VEICULO'
+      Required = True
+    end
+    object qryAgendamentosSTATUS: TStringField
+      FieldName = 'STATUS'
+      Origin = 'STATUS'
+      Required = True
+      Size = 200
+    end
+    object qryAgendamentosRESULTADO_LEGIVEL: TStringField
+      AutoGenerateValue = arDefault
+      FieldName = 'RESULTADO_LEGIVEL'
+      Origin = 'RESULTADO_LEGIVEL'
+      ProviderFlags = []
+      ReadOnly = True
+      FixedChar = True
+      Size = 12
+    end
+  end
+  object ds: TDataSource
+    DataSet = qryAgendamentos
+    Left = 600
+    Top = 113
+  end
+end

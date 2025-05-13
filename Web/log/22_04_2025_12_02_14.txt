@@ -1,0 +1,14 @@
+D2Bridge Framework
+by Talis Jonatas Gomes
+https://www.d2bridge.com.br
+
+LOG Started in 22/04/2025 12:02:14
+
+22/04/2025 12:03:42 | Identy = main | Component = Form1 | Event = OnCreate | Error = [FireDAC][Comp][Clnt]-512. Connection is not defined for [qryAgendamentos]. Possible reason: Connection and ConnectionName property values are both empty
+22/04/2025 12:03:42 | Identy = main | Component = Form1 | Event = FormOnShow | Error = Access violation at address 016CB1C8 in module 'APSFSIWEB.exe'. Read of address 00000068
+22/04/2025 12:03:51 | Identy = main | Component = btnRefresh | Event = OnClick | Error = [FireDAC][Comp][Clnt]-512. Connection is not defined for [qryAgendamentos]. Possible reason: Connection and ConnectionName property values are both empty
+22/04/2025 12:03:52 | Identy = main | Component = btnRefresh | Event = OnClick | Error = [FireDAC][Comp][Clnt]-512. Connection is not defined for [qryAgendamentos]. Possible reason: Connection and ConnectionName property values are both empty
+22/04/2025 12:03:53 | Identy = main | Component = btnRefresh | Event = OnClick | Error = [FireDAC][Comp][Clnt]-512. Connection is not defined for [qryAgendamentos]. Possible reason: Connection and ConnectionName property values are both empty
+22/04/2025 12:03:53 | Identy = main | Component = Form1 | Event = FormOnShow | Error = Access violation at address 016CB1C8 in module 'APSFSIWEB.exe'. Read of address 00000068
+22/04/2025 12:03:54 | Identy = main | Component = Form1 | Event = FormOnShow | Error = Access violation at address 016CB1C8 in module 'APSFSIWEB.exe'. Read of address 00000068
+22/04/2025 12:03:55 | Identy = main | Component = Form1 | Event = FormOnShow | Error = Access violation at address 016CB1C8 in module 'APSFSIWEB.exe'. Read of address 00000068

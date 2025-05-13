@@ -1,0 +1,81 @@
+object FormReagendamento: TFormReagendamento
+  Left = 0
+  Top = 0
+  Caption = 'FormReagendamento'
+  ClientHeight = 418
+  ClientWidth = 642
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnlCenter: TPanel
+    AlignWithMargins = True
+    Left = 100
+    Top = 50
+    Width = 442
+    Height = 303
+    Margins.Left = 100
+    Margins.Top = 50
+    Margins.Right = 100
+    Margins.Bottom = 30
+    Align = alClient
+    BevelKind = bkFlat
+    BevelOuter = bvNone
+    TabOrder = 0
+    object btnReagendar: TButton
+      AlignWithMargins = True
+      Left = 50
+      Top = 254
+      Width = 338
+      Height = 25
+      Margins.Left = 50
+      Margins.Top = 0
+      Margins.Right = 50
+      Margins.Bottom = 20
+      Align = alBottom
+      Caption = 'Salvar Reagendamento'
+      TabOrder = 0
+      OnClick = btnReagendarClick
+    end
+    object dtReagendamento: TDateTimePicker
+      Left = 50
+      Top = 77
+      Width = 327
+      Height = 22
+      Date = 45787.000000000000000000
+      Time = 0.424101585645985300
+      TabOrder = 1
+    end
+    object dtHoraReagendamento: TDateTimePicker
+      Left = 50
+      Top = 105
+      Width = 327
+      Height = 22
+      BevelOuter = bvNone
+      Date = 45787.000000000000000000
+      Time = 0.424101585645985300
+      Kind = dtkTime
+      TabOrder = 2
+    end
+  end
+  object btnCancelarReagendamento: TButton
+    AlignWithMargins = True
+    Left = 50
+    Top = 383
+    Width = 542
+    Height = 25
+    Margins.Left = 50
+    Margins.Top = 0
+    Margins.Right = 50
+    Margins.Bottom = 10
+    Align = alBottom
+    Caption = 'Cancelar'
+    TabOrder = 1
+    OnClick = btnCancelarReagendamentoClick
+  end
+end

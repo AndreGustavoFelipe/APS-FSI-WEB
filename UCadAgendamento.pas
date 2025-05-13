@@ -1,0 +1,307 @@
+unit UCadAgendamento;
+
+{ Copyright 2025 / 2026 D2Bridge Framework by Talis Jonatas Gomes }
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, 
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
+  D2Bridge.Forms, Vcl.ExtCtrls, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxEdit, cxNavigator, Data.DB, cxDBData, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  cxGridTableView, cxGridDBTableView, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  cxGridCustomTableView, cxGridCardView, cxGridDBCardView,
+  cxGridCustomLayoutView, cxGridLevel, cxClasses, cxGridCustomView, cxGrid,
+  Vcl.Grids, Vcl.DBGrids, Vcl.ComCtrls;
+
+type
+  TFormCadAgendamentos = class(TD2BridgeForm)
+    Panel1: TPanel;
+    Label_Cadastro: TLabel;
+    btnSalvar: TButton;
+    btnCancelar: TButton;
+    editPlaca: TEdit;
+    editModelo: TEdit;
+    cbxTipoVeiculo: TComboBox;
+    editHora: TEdit;
+    queryServicos: TFDQuery;
+    queryServicosID: TIntegerField;
+    queryServicosDESCRICAO: TStringField;
+    queryServicosVALOR: TSingleField;
+    dsServicos: TDataSource;
+    queryFuncionarios: TFDQuery;
+    queryFuncionariosID: TIntegerField;
+    queryFuncionariosNOME: TStringField;
+    queryFuncionariosSENHA: TStringField;
+    queryFuncionariosTIPO: TSmallintField;
+    dsFuncionarios: TDataSource;
+    dbGridFuncionario: TDBGrid;
+    dbGridsServicos: TDBGrid;
+    dtAgendamento: TDateTimePicker;
+    dtHora: TDateTimePicker;
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    function VerificaCampos: boolean;
+    function CountSelectedRows(Grid: TDBGrid): Integer;
+    { Private declarations }
+  public
+    function HoraEntrega(hora: TTime): TTime;
+    { Public declarations }
+  protected
+    procedure ExportD2Bridge; override;
+    procedure InitControlsD2Bridge(const PrismControl: TPrismControl); override;
+    procedure RenderD2Bridge(const PrismControl: TPrismControl; var HTMLControl: string); override;
+  end;
+
+function FormCadAgendamentos:TFormCadAgendamentos;
+
+implementation
+
+Uses
+  APSFSIWEBWebApp, UDataModule, Unit_Login, System.DateUtils;
+
+{$R *.dfm}
+
+function FormCadAgendamentos:TFormCadAgendamentos;
+begin
+  result:= TFormCadAgendamentos(TFormCadAgendamentos.GetInstance);
+end;
+
+procedure TFormCadAgendamentos.btnCancelarClick(Sender: TObject);
+begin
+  Close;
+end;
+
+function TFormCadAgendamentos.HoraEntrega(hora: TTime): TTime;
+begin
+  Result := IncHour(hora, 1);
+end;
+
+function TFormCadAgendamentos.VerificaCampos() : boolean;
+begin
+  if editPlaca.Text = '' then
+  begin
+    showmessage('Informe uma placa!');
+    result := false;
+  end
+  else if editModelo.Text = '' then
+  begin
+    showmessage('Informe um modelo!');
+    result := false;
+  end
+  else if cbxTipoVeiculo.ItemIndex = -1 then
+  begin
+    showmessage('Selecione algum tipo de veiculo!');
+    result := false;
+  end
+  else if CountSelectedRows(dbGridFuncionario) <= 0  then
+  begin
+    showmessage('Selecione um funcionario!');
+    result := false;
+  end
+  else if CountSelectedRows(dbGridsServicos) <= 0 then
+  begin
+    showmessage('Selecione ao menos um serviço!');
+    result := false;
+  end
+
+  else
+    result := true;
+end;
+
+function TFormCadAgendamentos.CountSelectedRows(Grid: TDBGrid): Integer;
+var
+  i: Integer;
+begin
+  Result := 0;
+  with Grid.SelectedRows do
+  begin
+    for i := 0 to Count - 1 do
+      Inc(Result);
+  end;
+end;
+
+procedure TFormCadAgendamentos.btnSalvarClick(Sender: TObject);
+var
+  bm: TBookmark;
+var
+  idAgendamento, i : integer;
+begin
+
+  if VerificaCampos then
+  begin
+
+    with TFDQuery.Create(Self) do
+    begin
+      try
+        connection := dm.con;
+
+        sql.Add('insert into AGENDAMENTOS(ID_CLIENTE, ID_FUNCINARIO, DATA_AGENDAMENTO, DATA_AGENDADA, HORA_AGENDAMENTO, HORA_ENTREGA, PLACA, TIPO_VEICULO, STATUS, MODELO)');
+        sql.Add('values (:ID_CLIENTE, :ID_FUNCINARIO, :DATA_AGENDAMENTO, :DATA_AGENDADA, :HORA_AGENDAMENTO, :HORA_ENTREGA, :PLACA, :TIPO_VEICULO, :STATUS, :MODELO)');
+        sql.Add('returning id');
+
+        ParamByName('ID_CLIENTE').Value := Form_Login.idUsuario;
+        ParamByName('ID_FUNCINARIO').Value := dbGridFuncionario.DataSource.DataSet.FieldByName('ID').Value;
+
+        ParamByName('DATA_AGENDAMENTO').DataType :=  ftdate;
+        ParamByName('DATA_AGENDAMENTO').asdate := now;
+
+        ParamByName('DATA_AGENDADA').DataType :=  ftdate;
+        ParamByName('DATA_AGENDADA').asdate :=  dtAgendamento.Date;
+
+        ParamByName('HORA_AGENDAMENTO').DataType := ftTime;
+        ParamByName('HORA_AGENDAMENTO').AsTime := dtHora.Time;
+
+        ParamByName('HORA_ENTREGA').DataType := ftTime;
+        ParamByName('HORA_ENTREGA').Astime := HoraEntrega(dtHora.Time);
+
+        ParamByName('PLACA').Value := editPlaca.Text;
+        ParamByName('TIPO_VEICULO').Value := cbxTipoVeiculo.ItemIndex;
+        ParamByName('MODELO').Value := editModelo.Text;
+        ParamByName('STATUS').Value := '0';
+
+        Open;
+
+        idAgendamento := FieldByName('ID').Value;
+
+        with dbGridsServicos, DataSource.DataSet do
+        begin
+          for I := 0 to SelectedRows.Count - 1 do
+          begin
+            bm := SelectedRows.Items[I];
+            GotoBookmark(bm);
+
+            SQL.Clear;
+            SQL.Add('insert into ITENS_AGENDAMENTO(id, id_agendamento)');
+            SQL.Add('values(:id, :id_agendamento)');
+
+            ParamByName('id').Value := FieldByName('id').AsInteger;
+            ParamByName('id_agendamento').Value := idAgendamento;
+
+            ExecSQL;
+          end;
+        end;
+
+      finally
+
+        showmessage('Agendamento realizado com sucesso!');
+
+        Free;
+
+      end;
+    end;
+
+    close;
+  end;
+
+end;
+
+procedure TFormCadAgendamentos.ExportD2Bridge;
+begin
+  inherited;
+
+  Title:= 'My D2Bridge Web Application';
+ SubTitle:= 'My WebApp';
+
+ //Background color
+ D2Bridge.HTML.Render.BodyStyle:= 'background-color: #191970;';
+
+ //TemplateClassForm:= TD2BridgeFormTemplate;
+ D2Bridge.FrameworkExportType.TemplateMasterHTMLFile:= '';
+ D2Bridge.FrameworkExportType.TemplatePageHTMLFile := '';
+
+ //Export yours Controls
+ with D2Bridge.Items.add do
+ begin
+
+  //Image Backgroup Full Size *Use also ImageFromURL...
+//  ImageFromTImage(Image_BackGround, CSSClass.Image.Image_BG20_FullSize);
+
+  with Card do
+  begin
+   CSSClasses:= CSSClass.Card.Card_Center_Large;
+   HTMLStyle := 'background-color: #191970; color : white;';
+
+
+//   ImageICOFromTImage(Image_Logo, CSSClass.Col.ColSize4);
+
+   with BodyItems.Add do
+   begin
+    with Row.Items.Add do
+     VCLObj(Label_Cadastro);
+    with Row.Items.Add do
+     FormGroup('Placa', CSSClass.Col.colsize12).AddVCLObj(editPlaca, 'ValidationLogin', true);
+    with Row.Items.Add do
+     FormGroup('Modelo', CSSClass.Col.colsize12).AddVCLObj(editModelo, 'ValidationLogin', true);
+    with Row.Items.Add do
+     FormGroup('Tipo do Veiculo', CSSClass.Col.colsize12).AddVCLObj(cbxTipoVeiculo, 'ValidationLogin', true);
+    with Row.Items.Add do
+     FormGroup('Data do Serviço', CSSClass.Col.colsize12).AddVCLObj(dtAgendamento, 'ValidationLogin', true);
+    with Row.Items.Add do
+     FormGroup('Hora do Serviço', CSSClass.Col.colsize12).AddVCLObj(dtHora, 'ValidationLogin', true);
+//    with Row.Items.Add do
+//     FormGroup('Selecione o funcionario', CSSClass.Col.colsize12).AddVCLObj(cxGridFuncionarios);
+//    with Row.Items.Add do
+//     FormGroup('Selecione os serviços', CSSClass.Col.colsize12).AddVCLObj(cxGridServicos);
+    with Row.Add do
+      VCLObj(dbGridFuncionario, CSSClass.Col.colsize12);
+    with Row.Add do
+      VCLObj(dbGridsServicos, CSSClass.Col.colsize12);
+    with Row.Items.Add do
+     VCLObj(btnSalvar, 'ValidationLogin', false, CSSClass.Button.save + CSSClass.Col.colsize12);
+    with Row.Items.Add do
+     VCLObj(btnCancelar, CSSClass.Button.cancel + CSSClass.Col.colsize12);
+   end;
+  end;
+ end;
+
+end;
+
+procedure TFormCadAgendamentos.FormShow(Sender: TObject);
+begin
+  queryFuncionarios.Open;
+  queryServicos.Open;
+end;
+
+procedure TFormCadAgendamentos.InitControlsD2Bridge(const PrismControl: TPrismControl);
+begin
+ inherited;
+
+//  if PrismControl.VCLComponent = editDataServico then
+//    PrismControl.AsEdit.TextMask := TPrismTextMask.BrazilDate;
+
+//  if PrismControl.VCLComponent = editHora then
+//    PrismControl.AsEdit.TextMask := TPrismTextMask.BrazilHour;
+
+ //Change Init Property of Prism Controls
+ {
+  if PrismControl.VCLComponent = Edit1 then
+   PrismControl.AsEdit.DataType:= TPrismFieldType.PrismFieldTypeInteger;
+
+  if PrismControl.IsDBGrid then
+  begin
+   PrismControl.AsDBGrid.RecordsPerPage:= 10;
+   PrismControl.AsDBGrid.MaxRecords:= 2000;
+  end;
+ }
+end;
+
+procedure TFormCadAgendamentos.RenderD2Bridge(const PrismControl: TPrismControl; var HTMLControl: string);
+begin
+ inherited;
+
+ //Intercept HTML
+ {
+  if PrismControl.VCLComponent = Edit1 then
+  begin
+   HTMLControl:= '</>';
+  end;
+ }
+end;
+
+end.

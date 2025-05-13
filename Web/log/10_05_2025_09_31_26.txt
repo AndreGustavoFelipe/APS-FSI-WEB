@@ -1,0 +1,8 @@
+D2Bridge Framework
+by Talis Jonatas Gomes
+https://www.d2bridge.com.br
+
+LOG Started in 10/05/2025 09:31:26
+
+10/05/2025 09:31:44 | Identy = main | Form = Form1 | Component = Form1 | Event = FormOnShow | Error = [FireDAC][Phys][FB]file  is not a valid database
+10/05/2025 09:31:54 | Identy = main | Form = Form1 | Component = Form1 | Event = FormOnShow | Error = [FireDAC][Phys][FB]file  is not a valid database

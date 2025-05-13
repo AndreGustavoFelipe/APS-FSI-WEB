@@ -1,0 +1,8 @@
+D2Bridge Framework
+by Talis Jonatas Gomes
+https://www.d2bridge.com.br
+
+LOG Started in 22/04/2025 12:00:08
+
+22/04/2025 12:00:12 | Identy = main | Component = Form1 | Event = FormOnShow | Error = Access violation at address 016CB21C in module 'APSFSIWEB.exe'. Read of address 00000068
+22/04/2025 12:00:16 | Identy = main | Component = btnRefresh | Event = OnClick | Error = [FireDAC][Comp][Clnt]-512. Connection is not defined for [qryAgendamentos]. Possible reason: Connection and ConnectionName property values are both empty

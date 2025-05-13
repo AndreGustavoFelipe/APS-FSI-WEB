@@ -1,0 +1,9 @@
+D2Bridge Framework
+by Talis Jonatas Gomes
+https://www.d2bridge.com.br
+
+LOG Started in 22/04/2025 17:44:09
+
+22/04/2025 17:44:17 | Identy = main | Component = Form1 | Event = FormOnShow | Error = Access violation at address 016CB3DC in module 'APSFSIWEB.exe'. Read of address 00000068
+22/04/2025 17:44:21 | Identy = main | Component = Form1 | Event = FormOnShow | Error = Access violation at address 016CB3DC in module 'APSFSIWEB.exe'. Read of address 00000068
+22/04/2025 17:44:53 | Identy = main | Component = Form1_1 | Event = FormOnShow | Error = Access violation at address 016CB3DC in module 'APSFSIWEB.exe'. Read of address 00000068

@@ -1,0 +1,14 @@
+object dtm: Tdtm
+  OldCreateOrder = False
+  Height = 163
+  Width = 232
+  object con: TFDConnection
+    Params.Strings = (
+      'User_Name=SYSDBA'
+      'Password=masterkey'
+      'DriverID=FB')
+    LoginPrompt = False
+    Left = 104
+    Top = 64
+  end
+end
