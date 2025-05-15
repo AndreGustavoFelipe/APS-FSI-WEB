@@ -89,7 +89,7 @@ begin
 
 //  Title:= 'My D2Bridge Form';
 
-  D2Bridge.HTML.Render.BodyStyle:= 'background-color: #191970; color: #191970; width: 40vw';
+  D2Bridge.HTML.Render.BodyStyle:= 'background-color: #191970; color: #191970;';
 
   //TemplateClassForm:= TD2BridgeFormTemplate;
   D2Bridge.FrameworkExportType.TemplateMasterHTMLFile:= '';
@@ -99,13 +99,14 @@ begin
   begin
 
     with Row.Items.Add do
-     VCLObj(dtReagendamento, CSSClass.Col.colsize12);
+     VCLObj(dtReagendamento, CSSClass.Col.colsize6);
     with Row.Items.Add do
-     VCLObj(dtHoraReagendamento, CSSClass.Col.colsize12);
     with Row.Items.Add do
-     VCLObj(btnReagendar, CSSClass.Button.save + CSSClass.Col.colsize12);
+     VCLObj(dtHoraReagendamento, CSSClass.Col.colsize6);
     with Row.Items.Add do
-     VCLObj(btnCancelarReagendamento, CSSClass.Button.cancel + CSSClass.Col.colsize12);
+     VCLObj(btnReagendar, CSSClass.Button.save + CSSClass.Col.colsize6);
+    with Row.Items.Add do
+     VCLObj(btnCancelarReagendamento, CSSClass.Button.cancel + CSSClass.Col.colsize6);
 
 
 //    with Row.Add do

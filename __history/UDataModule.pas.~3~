@@ -13,7 +13,6 @@ uses
 type
   Tdm = class(TDataModule)
     con: TFDConnection;
-    procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -39,13 +38,6 @@ end;
 function dm:Tdm;
 begin
  result:= Tdm(D2BridgeInstance.GetInstance(Tdm));
-end;
-
-procedure Tdm.DataModuleCreate(Sender: TObject);
-begin
-  Con.Connected := False;
-  Con.Params.Values['Database'] := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + 'dados\BDAPSFDSI.FDB';
-  Con.Connected := True;
 end;
 
 end.

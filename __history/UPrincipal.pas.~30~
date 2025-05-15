@@ -28,7 +28,7 @@ uses
   cxMaskEdit, Vcl.ExtCtrls, Vcl.Mask, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client, UCadAgendamento, Vcl.DBCtrls; //Declare D2Bridge.Forms always in the last unit
+  FireDAC.Comp.Client, UCadAgendamento, Vcl.DBCtrls, UReagendar, Vcl.ComCtrls; //Declare D2Bridge.Forms always in the last unit
 
 type
   TForm1 = class(TD2BridgeForm)
@@ -36,26 +36,45 @@ type
     Module11: TMenuItem;
     Panel1: TPanel;
     Panel2: TPanel;
-    maskEditData: TMaskEdit;
     qryAgendamentos: TFDQuery;
     ds: TDataSource;
-    qryAgendamentosID_CLIENTE: TIntegerField;
-    qryAgendamentosDATA_AGENDAMENTO: TDateField;
-    qryAgendamentosDATA_AGENDADA: TDateField;
     btnRefresh: TButton;
     Panel3: TPanel;
     lblDtAgendada: TLabel;
     DBTextDataAgendamento: TDBText;
     btnCancelarAgendamento: TButton;
     btnReagendar: TButton;
+    dateBusca: TDateTimePicker;
+    lblHoraAgendada: TLabel;
+    DBTextHoraAgendamento: TDBText;
+    lblHoraEntrega: TLabel;
+    DBTextHoraEntrega: TDBText;
+    lblFuncionario: TLabel;
+    DBTextFuncionario: TDBText;
+    lblStatus: TLabel;
+    DBTextStatus: TDBText;
+    qryAgendamentosID: TIntegerField;
+    qryAgendamentosID_CLIENTE: TIntegerField;
+    qryAgendamentosID_FUNCINARIO: TIntegerField;
+    qryAgendamentosDATA_AGENDAMENTO: TDateField;
+    qryAgendamentosDATA_AGENDADA: TDateField;
+    qryAgendamentosHORA_AGENDAMENTO: TTimeField;
+    qryAgendamentosHORA_ENTREGA: TTimeField;
+    qryAgendamentosPLACA: TStringField;
+    qryAgendamentosMODELO: TStringField;
+    qryAgendamentosTIPO_VEICULO: TSmallintField;
+    qryAgendamentosSTATUS: TStringField;
+    qryAgendamentosRESULTADO_LEGIVEL: TStringField;
     procedure Module11Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure btnCancelarAgendamentoClick(Sender: TObject);
+    procedure btnReagendarClick(Sender: TObject);
   private
-    VDtm : TDataModule;
+    vFormReagendamento : TFormReagendamento;
 
   public
+    codigoReagendamento : integer;
 
   protected
    procedure ExportD2Bridge; override;
@@ -68,7 +87,7 @@ Function Form1: TForm1;
 implementation
 
 Uses
-   APSFSIWEBWebApp, UDataModule;
+   APSFSIWEBWebApp, UDataModule, Unit_Login;
 
 Function Form1: TForm1;
 begin
@@ -80,8 +99,64 @@ end;
 { TForm1 }
 
 procedure TForm1.btnCancelarAgendamentoClick(Sender: TObject);
+var
+  status: Integer;
 begin
-  ShowMessage('Tem certeza que deseja cancelar o agendamento para o dia ' + ds.DataSet.FieldByName('DATA_AGENDAMENTO').AsString + '?');
+  status := ds.DataSet.FieldByName('STATUS').AsInteger;
+
+  if status in [0, 1] then
+  begin
+    if (MessageDlg('Tem certeza que deseja cancelar este agendamento?', mtWarning, [mbNo, mbYes], 0) = mrYes) then
+    begin
+      with TFDQuery.Create(Self) do
+      begin
+        try
+          connection := dm.con;
+
+          SQL.Add('update agendamentos');
+          SQL.Add('set status = :status');
+          SQL.Add('where id = :id');
+
+          ParamByName('id').Value := ds.DataSet.FieldByName('id').Value;
+          ParamByName('status').Value := 3;
+
+          ExecSQL;
+
+        finally
+          Free;
+        end;
+      end;
+
+      btnRefreshClick(Self);
+    end;
+  end
+  else if status = 2 then
+    ShowMessage('Este agendamento já foi concluído e não pode ser cancelado.')
+  else if status = 3 then
+    ShowMessage('Este agendamento já está cancelado.')
+  else if status = 4 then
+    ShowMessage('Este agendamento está atrasado e não pode ser cancelado.');
+end;
+
+procedure TForm1.btnReagendarClick(Sender: TObject);
+var
+  status: Integer;
+begin
+  status := ds.DataSet.FieldByName('STATUS').AsInteger;
+
+  if status in [0, 1, 4] then
+  begin
+    codigoReagendamento := ds.DataSet.FieldByName('ID').AsInteger;
+    ShowPopupModal('PopupReagendamento');
+    btnRefreshClick(Self);
+  end
+  else if status = 2 then
+    ShowMessage('Este agendamento já foi concluído e não pode ser reagendado.')
+  else if status = 3 then
+    ShowMessage('Este agendamento está cancelado e não pode ser reagendado.');
+
+  if IsD2BridgeContext then
+
 end;
 
 procedure TForm1.btnRefreshClick(Sender: TObject);
@@ -103,7 +178,8 @@ begin
  D2Bridge.FrameworkExportType.TemplateMasterHTMLFile:= '';
  D2Bridge.FrameworkExportType.TemplatePageHTMLFile := '';
 
- vdtm := tdtm.create(self);
+ vFormReagendamento := TFormReagendamento.Create(Self);
+ D2Bridge.AddNested(vFormReagendamento);
 
  //Export yours Controls
  with D2Bridge.Items.add do
@@ -120,7 +196,7 @@ begin
 
     with FormGroup('Informe uma data', CSSClass.Col.colsize3).Items.Add do
     begin
-      VCLObj(maskEditData);
+      VCLObj(dateBusca);
       VCLObj(btnRefresh, CSSClass.Button.search);
     end;
   end;
@@ -134,17 +210,47 @@ begin
    begin
     with Row.Items.Add do
     begin
+     Col{Auto}.Add.VCLObj(lblStatus, CSSClass.Col.colsize6);
+     Col.Add.VCLObj(DBTextStatus, CSSClass.Col.colsize6);
+    end;
+
+    with Row.Items.Add do
+    begin
      Col{Auto}.Add.VCLObj(lblDtAgendada, CSSClass.Col.colsize6);
      Col.Add.VCLObj(DBTextDataAgendamento, CSSClass.Col.colsize6);
     end;
 
-    with Row.Add do
-      VCLObj(btnReagendar, CSSClass.Button.edit + CSSClass.Col.colsize12);
+    with Row.Items.Add do
+    begin
+     Col{Auto}.Add.VCLObj(lblHoraAgendada, CSSClass.Col.colsize6);
+     Col.Add.VCLObj(DBTextHoraAgendamento, CSSClass.Col.colsize6);
+    end;
 
-    with Row.Add do
-      VCLObj(btnCancelarAgendamento, CSSClass.Button.cancel + CSSClass.Col.colsize12);
+    with Row.Items.Add do
+    begin
+     Col{Auto}.Add.VCLObj(lblHoraEntrega, CSSClass.Col.colsize6);
+     Col.Add.VCLObj(DBTextHoraEntrega, CSSClass.Col.colsize6);
+    end;
+
+    with Row.Items.Add do
+    begin
+     Col{Auto}.Add.VCLObj(lblFuncionario, CSSClass.Col.colsize6);
+     Col.Add.VCLObj(DBTextFuncionario, CSSClass.Col.colsize6);
+    end;
+
+    with Row.Items.Add do
+    begin
+      VCLObj(btnReagendar, CSSClass.Button.edit + CSSClass.Col.colsize8 + CSSClass.Space.margim_auto);
+      VCLObj(btnCancelarAgendamento, CSSClass.Button.cancel + CSSClass.Col.colsize8 + CSSClass.Space.margim_auto);
+    end;
+
+//    with Row.Items.Add do
 
   end;
+
+
+    with Popup('PopupReagendamento', 'Reagendamento').Items.Add do
+      Nested(vFormReagendamento);
 
 //  with Row.Add do
 //    VCLObj(cxGridAgendamentos);
@@ -173,10 +279,29 @@ end;
 
 procedure TForm1.FormShow(Sender: TObject);
 begin
-  if dtm = nil then
-    Tdtm.CreateInstance;
+//  if dtm = nil then
+//    Tdtm.CreateInstance;
 
-  dtm.con.Connected := true;
+//  dtm.con.Connected := true;
+  with qryAgendamentos do
+  begin
+    sql.Clear;
+    sql.Add('SELECT ID, ID_CLIENTE, ID_FUNCINARIO, DATA_AGENDAMENTO, DATA_AGENDADA,');
+    sql.Add('       HORA_AGENDAMENTO, HORA_ENTREGA, PLACA, MODELO, TIPO_VEICULO, status,');
+    sql.Add('       CASE status');
+    sql.Add('         WHEN ''0'' THEN ''Agendado''');
+    sql.Add('         WHEN ''1'' THEN ''Em andamento''');
+    sql.Add('         WHEN ''2'' THEN ''Finalizado''');
+    sql.Add('         WHEN ''3'' THEN ''Cancelado''');
+    sql.Add('         WHEN ''4'' THEN ''Atrasado''');
+    sql.Add('         ELSE ''Desconhecido''');
+    sql.Add('       END AS resultado_legivel');
+    sql.Add('FROM agendamentos');
+
+    sql.Add('where id_cliente = :id_cliente');
+    ParamByName('id_cliente').Value := Form_Login.idUsuario.ToInteger;
+  end;
+
   qryAgendamentos.Active := true;
 //  btnRefreshClick(self);
 end;
@@ -185,8 +310,8 @@ procedure TForm1.InitControlsD2Bridge(const PrismControl: TPrismControl);
 begin
  inherited;
 
- if PrismControl.VCLComponent = maskEditData then
-  PrismControl.AsEdit.TextMask := TPrismTextMask.BrazilDate;
+// if PrismControl.VCLComponent = maskEditData then
+//  PrismControl.AsEdit.TextMask := TPrismTextMask;
 
  //Menu example
  {

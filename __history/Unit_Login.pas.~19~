@@ -9,7 +9,7 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client, dxGDIPlusClasses; //Declare D2Bridge.Forms always in the last unit
+  FireDAC.Comp.Client; //Declare D2Bridge.Forms always in the last unit
 
 type
   TForm_Login = class(TD2BridgeForm)
@@ -154,18 +154,19 @@ begin
  begin
 
   //Image Backgroup Full Size *Use also ImageFromURL...
-//  ImageFromTImage(Image_BackGround, CSSClass.Image.Image_BG20_FullSize);
+  ImageFromTImage(Image_BackGround, CSSClass.Image.Image_BG20_FullSize);
 
   with Card do
   begin
    CSSClasses:= CSSClass.Card.Card_Center;
    HTMLStyle := 'background-color: #191970;';
 
+//   ImageICOFromTImage(Image_Logo, CSSClass.Col.ColSize4);
+
    with BodyItems.Add do
    begin
-    ImageICOFromTImage(Image_BackGround, CSSClass.Col.ColSize8);
     with Row.Items.Add do
-      VCLObj(Label_Login, CSSClass.Space.margim_bottom5);
+      VCLObj(Label_Login);
     with Row.Items.Add do
       VCLObj(Edit_UserName, 'ValidationLogin', true);
     with Row.Items.Add do

@@ -58,8 +58,8 @@ begin
           SQL.Add('insert into USUARIOS(NOME, SENHA, TIPO)');
           SQL.Add('values(:nome, :senha, :tipo)');
 
-          ParamByName('nome').Value := editUsername.Text;
-          ParamByName('senha').Value := editPassword.Text;
+          ParamByName('nome').Value := UpperCase(editUsername.Text);
+          ParamByName('senha').Value := UpperCase(editPassword.Text);
           ParamByName('tipo').Value := '0';
 
           ExecSQL;

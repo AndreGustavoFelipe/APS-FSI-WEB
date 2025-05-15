@@ -238,10 +238,10 @@ begin
      Col.Add.VCLObj(DBTextFuncionario, CSSClass.Col.colsize6);
     end;
 
-    with Row.Add do
+    with Row.Items.Add do
       VCLObj(btnReagendar, CSSClass.Button.edit + CSSClass.Col.colsize12);
 
-    with Row.Add do
+    with Row.Items.Add do
       VCLObj(btnCancelarAgendamento, CSSClass.Button.cancel + CSSClass.Col.colsize12);
 
   end;

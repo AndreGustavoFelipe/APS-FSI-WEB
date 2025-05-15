@@ -36,7 +36,7 @@ function FormCadastro:TFormCadastro;
 implementation
 
 Uses
-  APSFSIWEBWebApp, FireDAC.Comp.Client, UDataModule;
+  APSFSIWEBWebApp, FireDAC.Comp.Client;
 
 {$R *.dfm}
 
@@ -47,45 +47,43 @@ end;
 
 procedure TFormCadastro.btnCadastrarClick(Sender: TObject);
 begin
-  if (editPassword.Text = editPassword.Text) then
-   begin
-    with TFDQuery.Create(Self) do
-      begin
-        try
-          Connection := dm.con;
+  if (editUsername.Text = 'admin') and (editPassword.Text = 'admin') then
+ begin
+  with TFDQuery.Create(Self) do
+    begin
+      try
+        Connection := dm.con;
 
-          SQL.Clear;
-          SQL.Add('insert into USUARIOS(NOME, SENHA, TIPO)');
-          SQL.Add('values(:nome, :senha, :tipo)');
+        SQL.Clear;
+        SQL.Add('insert into USUARIOS(NOME, SENHA, TIPO)');
+        SQL.Add('values(:nome, :senha, :tipo)');
 
-          ParamByName('nome').Value := editUsername.Text;
-          ParamByName('senha').Value := editPassword.Text;
-          ParamByName('tipo').Value := '0';
+        ParamByName('nome').Value := editUsername.Text;
+        ParamByName('senha').Value := editPassword.Text;
+        ParamByName('tipo').Value := rdGroupTipos.ItemIndex;
 
-          ExecSQL;
-        finally
-          ShowMessage('Cadastrado com Sucesso!');
-          Free;
-        end;
+        ExecSQL;
+      finally
+        ShowMessage('Cadastrado com Sucesso!');
+        Free;
       end;
+    end;
 
-    Close;
-   end
-   else
-   begin
-    D2Bridge.Validation(editUsername, false);
-    D2Bridge.Validation(editPassword, false);
-    D2Bridge.Validation(editRepeatPassword, false, 'Usuario ou senha inválidos!');
-    Exit;
-   end;
+  ShowMessage('Cadastro realizado com sucesso!');
+  Close;
+ end else
+ begin
+  D2Bridge.Validation(editUsername, false);
+  D2Bridge.Validation(editPassword, false);
+  D2Bridge.Validation(editRepeatPassword, false, 'Invalid username or password');
+  Exit;
+ end;
 
 
 end;
 
 procedure TFormCadastro.btnCancelarClick(Sender: TObject);
 begin
-  editUsername.text := '';
-  editPassword.text := '';
   Close;
 end;
 
@@ -140,6 +138,9 @@ end;
 procedure TFormCadastro.InitControlsD2Bridge(const PrismControl: TPrismControl);
 begin
  inherited;
+
+  if PrismControl.VCLComponent = editCPF then
+    PrismControl.AsEdit.TextMask := TPrismTextMask.BrazilCPF;
 
  //Change Init Property of Prism Controls
  {

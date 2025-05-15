@@ -1,7 +1,7 @@
 object FormCadastro: TFormCadastro
   Left = 0
   Top = 0
-  Caption = 'Cadastro'
+  Caption = 'FormCadastro'
   ClientHeight = 367
   ClientWidth = 303
   Color = clBtnFace
@@ -17,7 +17,7 @@ object FormCadastro: TFormCadastro
     Left = 37
     Top = 23
     Width = 239
-    Height = 290
+    Height = 310
     Color = clWhite
     ParentBackground = False
     TabOrder = 0
@@ -37,28 +37,26 @@ object FormCadastro: TFormCadastro
     end
     object editUsername: TEdit
       Left = 18
-      Top = 92
+      Top = 130
       Width = 197
       Height = 21
-      CharCase = ecUpperCase
       Color = 14599344
       TabOrder = 0
       TextHint = 'Username'
     end
     object editPassword: TEdit
       Left = 18
-      Top = 131
+      Top = 169
       Width = 197
       Height = 21
-      CharCase = ecUpperCase
       Color = 14599344
       PasswordChar = '*'
       TabOrder = 1
       TextHint = 'Password'
     end
     object btnCadastrar: TButton
-      Left = 125
-      Top = 250
+      Left = 122
+      Top = 253
       Width = 90
       Height = 25
       Caption = 'Cadastrar'
@@ -67,7 +65,7 @@ object FormCadastro: TFormCadastro
     end
     object btnCancelar: TButton
       Left = 18
-      Top = 250
+      Top = 253
       Width = 90
       Height = 25
       Caption = 'Cancelar'
@@ -76,14 +74,22 @@ object FormCadastro: TFormCadastro
     end
     object editRepeatPassword: TEdit
       Left = 18
-      Top = 171
+      Top = 209
       Width = 197
       Height = 21
-      CharCase = ecUpperCase
       Color = 14599344
       PasswordChar = '*'
       TabOrder = 4
       TextHint = 'Repeat Password'
+    end
+    object editCPF: TEdit
+      Left = 18
+      Top = 89
+      Width = 197
+      Height = 21
+      Color = 14599344
+      TabOrder = 5
+      TextHint = 'CPF'
     end
   end
   object ToolBar1: TToolBar
@@ -93,5 +99,8 @@ object FormCadastro: TFormCadastro
     Height = 29
     Caption = 'ToolBar1'
     TabOrder = 1
+    ExplicitLeft = 88
+    ExplicitTop = 192
+    ExplicitWidth = 150
   end
 end

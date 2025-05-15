@@ -1,7 +1,7 @@
 object FormCadastro: TFormCadastro
   Left = 0
   Top = 0
-  Caption = 'Cadastro'
+  Caption = 'FormCadastro'
   ClientHeight = 367
   ClientWidth = 303
   Color = clBtnFace
