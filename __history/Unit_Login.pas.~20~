@@ -69,7 +69,7 @@ begin
 
       sql.Clear;
       sql.Add('SELECT * FROM USUARIOS');
-      sql.Add('WHERE NOME = :NOME AND SENHA = :SENHA AND TIPO = 0');
+      sql.Add('WHERE NOME = :NOME AND SENHA = :SENHA');
 
       ParamByName('NOME').Value := usuario;
       ParamByName('SENHA').Value := senha;

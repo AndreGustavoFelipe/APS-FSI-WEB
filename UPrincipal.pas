@@ -65,11 +65,14 @@ type
     qryAgendamentosTIPO_VEICULO: TSmallintField;
     qryAgendamentosSTATUS: TStringField;
     qryAgendamentosRESULTADO_LEGIVEL: TStringField;
+    qryAgendamentosNOME: TStringField;
+    Sair1: TMenuItem;
     procedure Module11Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure btnCancelarAgendamentoClick(Sender: TObject);
     procedure btnReagendarClick(Sender: TObject);
+    procedure Sair1Click(Sender: TObject);
   private
     vFormReagendamento : TFormReagendamento;
 
@@ -161,8 +164,31 @@ end;
 
 procedure TForm1.btnRefreshClick(Sender: TObject);
 begin
-  qryAgendamentos.Close;
-  qryAgendamentos.Open;
+  with qryAgendamentos do
+  begin
+    SQL.Clear;
+
+    SQL.Add('SELECT a.ID, a.ID_CLIENTE, a.ID_FUNCINARIO, u.NOME, a.DATA_AGENDAMENTO, a.DATA_AGENDADA,');
+    SQL.Add('       a.HORA_AGENDAMENTO, a.HORA_ENTREGA, a.PLACA, a.MODELO, a.TIPO_VEICULO, a.status,');
+    SQL.Add('       CASE a.status');
+    SQL.Add('         WHEN ''0'' THEN ''Agendado''');
+    SQL.Add('         WHEN ''1'' THEN ''Em andamento''');
+    SQL.Add('         WHEN ''2'' THEN ''Finalizado''');
+    SQL.Add('         WHEN ''3'' THEN ''Cancelado''');
+    SQL.Add('         WHEN ''4'' THEN ''Atrasado''');
+    SQL.Add('         ELSE ''Desconhecido''');
+    SQL.Add('       END AS resultado_legivel');
+    SQL.Add('FROM agendamentos a');
+    SQL.Add('INNER JOIN USUARIOS u ON u.ID = a.ID_FUNCINARIO');
+    SQL.Add('WHERE a.DATA_AGENDADA = :data and a.id_cliente = :idcli');
+
+    ParamByName('idcli').Value := Form_Login.idUsuario;
+
+    ParamByName('data').DataType := ftDate;
+    ParamByName('data').Value := dateBusca.Date;
+
+    Open;
+  end;
 end;
 
 procedure TForm1.ExportD2Bridge;
@@ -194,7 +220,7 @@ begin
 //    FormGroup('Informe uma data').AddVCLObj(maskEditData, CSSClass.Col.colsize1);
 //    FormGroup('').AddVCLObj(btnRefresh, CSSClass.Button.refresh);
 
-    with FormGroup('Informe uma data', CSSClass.Col.colsize3).Items.Add do
+    with FormGroup('Informe uma data', CSSClass.Col.colsize6).Items.Add do
     begin
       VCLObj(dateBusca);
       VCLObj(btnRefresh, CSSClass.Button.search);
@@ -281,27 +307,29 @@ begin
 //    Tdtm.CreateInstance;
 
 //  dtm.con.Connected := true;
-  with qryAgendamentos do
-  begin
-    sql.Clear;
-    sql.Add('SELECT ID, ID_CLIENTE, ID_FUNCINARIO, DATA_AGENDAMENTO, DATA_AGENDADA,');
-    sql.Add('       HORA_AGENDAMENTO, HORA_ENTREGA, PLACA, MODELO, TIPO_VEICULO, status,');
-    sql.Add('       CASE status');
-    sql.Add('         WHEN ''0'' THEN ''Agendado''');
-    sql.Add('         WHEN ''1'' THEN ''Em andamento''');
-    sql.Add('         WHEN ''2'' THEN ''Finalizado''');
-    sql.Add('         WHEN ''3'' THEN ''Cancelado''');
-    sql.Add('         WHEN ''4'' THEN ''Atrasado''');
-    sql.Add('         ELSE ''Desconhecido''');
-    sql.Add('       END AS resultado_legivel');
-    sql.Add('FROM agendamentos');
-
-    sql.Add('where id_cliente = :id_cliente');
-    ParamByName('id_cliente').Value := Form_Login.idUsuario.ToInteger;
-  end;
-
-  qryAgendamentos.Active := true;
-//  btnRefreshClick(self);
+//  with qryAgendamentos do
+//  begin
+//    sql.Clear;
+//    SQL.Add('SELECT a.ID, a.ID_CLIENTE, a.ID_FUNCINARIO, u.NOME, a.DATA_AGENDAMENTO, a.DATA_AGENDADA,');
+//    SQL.Add('       a.HORA_AGENDAMENTO, a.HORA_ENTREGA, a.PLACA, a.MODELO, a.TIPO_VEICULO, a.status,');
+//    SQL.Add('       CASE a.status');
+//    SQL.Add('         WHEN ''0'' THEN ''Agendado''');
+//    SQL.Add('         WHEN ''1'' THEN ''Em andamento''');
+//    SQL.Add('         WHEN ''2'' THEN ''Finalizado''');
+//    SQL.Add('         WHEN ''3'' THEN ''Cancelado''');
+//    SQL.Add('         WHEN ''4'' THEN ''Atrasado''');
+//    SQL.Add('         ELSE ''Desconhecido''');
+//    SQL.Add('       END AS resultado_legivel');
+//    SQL.Add('FROM agendamentos a');
+//    SQL.Add('INNER JOIN USUARIOS u ON u.ID = a.ID_FUNCINARIO');
+//
+//    sql.Add('where id_cliente = :id_cliente');
+//    ParamByName('id_cliente').Value := Form_Login.idUsuario.ToInteger;
+//  end;
+//
+//  qryAgendamentos.Active := true;
+  btnRefreshClick(self);
+  dateBusca.Date := Now;
 end;
 
 procedure TForm1.InitControlsD2Bridge(const PrismControl: TPrismControl);
@@ -368,6 +396,11 @@ begin
    HTMLControl:= '</>';
   end;
  }
+end;
+
+procedure TForm1.Sair1Click(Sender: TObject);
+begin
+  Close;
 end;
 
 end.

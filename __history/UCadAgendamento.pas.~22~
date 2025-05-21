@@ -266,8 +266,6 @@ procedure TFormCadAgendamentos.FormShow(Sender: TObject);
 begin
   queryFuncionarios.Open;
   queryServicos.Open;
-
-   dtAgendamento.Date := Now;
 end;
 
 procedure TFormCadAgendamentos.InitControlsD2Bridge(const PrismControl: TPrismControl);

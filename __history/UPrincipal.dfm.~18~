@@ -108,7 +108,7 @@ object Form1: TForm1
         Width = 165
         Height = 17
         Alignment = taRightJustify
-        DataField = 'NOME'
+        DataField = 'ID_FUNCINARIO'
         DataSource = ds
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -194,18 +194,14 @@ object Form1: TForm1
       Caption = 'Novo Agendamento'
       OnClick = Module11Click
     end
-    object Sair1: TMenuItem
-      Caption = 'Sair'
-      OnClick = Sair1Click
-    end
   end
   object qryAgendamentos: TFDQuery
     Connection = dm.con
     SQL.Strings = (
       
-        'SELECT a.ID, a.ID_CLIENTE, a.ID_FUNCINARIO, u.NOME, a.DATA_AGEND' +
-        'AMENTO, a.DATA_AGENDADA, a.HORA_AGENDAMENTO, a.HORA_ENTREGA, a.P' +
-        'LACA, a.MODELO, a.TIPO_VEICULO, a.status, '
+        'SELECT ID, ID_CLIENTE, ID_FUNCINARIO, DATA_AGENDAMENTO, DATA_AGE' +
+        'NDADA, HORA_AGENDAMENTO, HORA_ENTREGA, PLACA, MODELO, TIPO_VEICU' +
+        'LO, status, '
       '  CASE status'
       '    WHEN '#39'0'#39' THEN '#39'Agendado'#39
       '    WHEN '#39'1'#39' THEN '#39'Em andamento'#39
@@ -214,9 +210,7 @@ object Form1: TForm1
       '    WHEN '#39'4'#39' THEN '#39'Atrasado'#39
       '    ELSE '#39'Desconhecido'#39
       '  END AS resultado_legivel'
-      'FROM agendamentos a'
-      'inner join USUARIOS u'
-      'on u.ID = a.ID_FUNCINARIO')
+      'FROM agendamentos;')
     Left = 600
     Top = 64
     object qryAgendamentosID: TIntegerField
@@ -286,14 +280,6 @@ object Form1: TForm1
       ReadOnly = True
       FixedChar = True
       Size = 12
-    end
-    object qryAgendamentosNOME: TStringField
-      AutoGenerateValue = arDefault
-      FieldName = 'NOME'
-      Origin = 'NOME'
-      ProviderFlags = []
-      ReadOnly = True
-      Size = 200
     end
   end
   object ds: TDataSource

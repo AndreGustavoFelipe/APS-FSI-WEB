@@ -175,6 +175,8 @@ object Form1: TForm1
       Align = alLeft
       TabOrder = 0
       OnClick = btnRefreshClick
+      ExplicitLeft = 192
+      ExplicitTop = -6
     end
     object dateBusca: TDateTimePicker
       Left = 0
