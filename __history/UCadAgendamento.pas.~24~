@@ -106,7 +106,7 @@ begin
   end
   else if CountSelectedRows(dbGridsServicos) <= 0 then
   begin
-    showmessage('Selecione ao menos um serviÃ§o!');
+    showmessage('Selecione ao menos um serviço!');
     result := false;
   end
 
@@ -241,13 +241,13 @@ begin
     with Row.Items.Add do
      FormGroup('Tipo do Veiculo', CSSClass.Col.colsize12).AddVCLObj(cbxTipoVeiculo, 'ValidationLogin', true);
     with Row.Items.Add do
-     FormGroup('Data do ServiÃ§o', CSSClass.Col.colsize12).AddVCLObj(dtAgendamento, 'ValidationLogin', true);
+     FormGroup('Data do Serviço', CSSClass.Col.colsize12).AddVCLObj(dtAgendamento, 'ValidationLogin', true);
     with Row.Items.Add do
-     FormGroup('Hora do ServiÃ§o', CSSClass.Col.colsize12).AddVCLObj(dtHora, 'ValidationLogin', true);
+     FormGroup('Hora do Serviço', CSSClass.Col.colsize12).AddVCLObj(dtHora, 'ValidationLogin', true);
 //    with Row.Items.Add do
 //     FormGroup('Selecione o funcionario', CSSClass.Col.colsize12).AddVCLObj(cxGridFuncionarios);
 //    with Row.Items.Add do
-//     FormGroup('Selecione os serviÃ§os', CSSClass.Col.colsize12).AddVCLObj(cxGridServicos);
+//     FormGroup('Selecione os serviços', CSSClass.Col.colsize12).AddVCLObj(cxGridServicos);
     with Row.Add do
       VCLObj(dbGridFuncionario, CSSClass.Col.colsize12);
     with Row.Add do
@@ -273,21 +273,6 @@ end;
 procedure TFormCadAgendamentos.InitControlsD2Bridge(const PrismControl: TPrismControl);
 begin
  inherited;
-
-  if PrismControl.VCLComponent = dbGridFuncionario then
-  begin
-    with PrismControl.AsDBGrid do
-      ShowPager := false;
-  end;
-
-  if PrismControl.VCLComponent = dbGridsServicos then
-  begin
-    with PrismControl.AsDBGrid do
-      ShowPager := false;
-  end;
-
-
-
 
 //  if PrismControl.VCLComponent = editDataServico then
 //    PrismControl.AsEdit.TextMask := TPrismTextMask.BrazilDate;

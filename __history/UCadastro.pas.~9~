@@ -46,11 +46,7 @@ begin
 end;
 
 procedure TFormCadastro.btnCadastrarClick(Sender: TObject);
-var
-  existe : boolean;
 begin
-  existe := false;
-
   if (editPassword.Text = editPassword.Text) then
    begin
     with TFDQuery.Create(Self) do
@@ -58,41 +54,22 @@ begin
         try
           Connection := dm.con;
 
-          sql.Clear;
-          sql.Add('select * from usuarios');
-          sql.Add('where nome = :n');
+          SQL.Clear;
+          SQL.Add('insert into USUARIOS(NOME, SENHA, TIPO)');
+          SQL.Add('values(:nome, :senha, :tipo)');
 
-          ParamByName('n').Value := editUsername.Text;
+          ParamByName('nome').Value := editUsername.Text;
+          ParamByName('senha').Value := editPassword.Text;
+          ParamByName('tipo').Value := '0';
 
-          open;
-
-          if RecordCount > 0 then
-            existe := true;
-
-          if not existe then
-          begin
-            SQL.Clear;
-            SQL.Add('insert into USUARIOS(NOME, SENHA, TIPO)');
-            SQL.Add('values(:nome, :senha, :tipo)');
-
-            ParamByName('nome').Value := editUsername.Text;
-            ParamByName('senha').Value := editPassword.Text;
-            ParamByName('tipo').Value := '0';
-
-            ExecSQL;
-            ShowMessage('Usuario Cadastrado com Sucesso!');
-          end
-
-          else
-            ShowMessage('Esse Usuário já Existe!');
-
+          ExecSQL;
         finally
+          ShowMessage('Cadastrado com Sucesso!');
           Free;
         end;
       end;
 
-    if not existe then
-      Close;
+    Close;
    end
    else
    begin

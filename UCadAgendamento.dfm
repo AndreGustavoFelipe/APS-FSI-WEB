@@ -114,6 +114,7 @@ object FormCadAgendamentos: TFormCadAgendamentos
         item
           Expanded = False
           FieldName = 'NOME'
+          Title.Caption = 'NOME DO FUNCIONARIO'
           Visible = True
         end
         item
@@ -149,6 +150,7 @@ object FormCadAgendamentos: TFormCadAgendamentos
         item
           Expanded = False
           FieldName = 'DESCRICAO'
+          Title.Caption = 'TODOS'
           Visible = True
         end
         item

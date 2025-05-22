@@ -274,6 +274,21 @@ procedure TFormCadAgendamentos.InitControlsD2Bridge(const PrismControl: TPrismCo
 begin
  inherited;
 
+  if PrismControl.VCLComponent = dbGridFuncionario then
+  begin
+    with PrismControl.AsDBGrid do
+      ShowPager := false;
+  end;
+
+  if PrismControl.VCLComponent = dbGridsServicos then
+  begin
+    with PrismControl.AsDBGrid do
+      ShowPager := false;
+  end;
+
+
+
+
 //  if PrismControl.VCLComponent = editDataServico then
 //    PrismControl.AsEdit.TextMask := TPrismTextMask.BrazilDate;
 
